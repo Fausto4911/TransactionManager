@@ -18,22 +18,22 @@ public class TransactionManager implements Transaction {
     }
 
     @Override
-    public void begin(List<String> requests) throws InterruptedException {
+    public TransactionManager begin(List<String> requests) throws InterruptedException {
         System.out.println("length " + requests.size());
         executorService = Executors.newFixedThreadPool(requests.size());
         works = new HashSet<>(requests.size());
         requests.forEach(request ->
                 works.add(new TransactionWorker(request)));
+        return this;
     }
 
     @Override
     public void rollback() {
-        this.cancel();
     }
 
     @Override
     public void cancel() {
-        this.responses.clear();
+        this.works.clear();
         executorService.shutdown();
     }
 
@@ -45,7 +45,9 @@ public class TransactionManager implements Transaction {
     @Override
     public List<Future<String>> getResponse() {
         try {
-            return responses = executorService.invokeAll(works, 30, TimeUnit.SECONDS);
+            responses = executorService.invokeAll(works, 30, TimeUnit.SECONDS);
+            this.cancel();
+            return responses;
         } catch (Exception e) {
             return null;
         }

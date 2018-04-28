@@ -5,7 +5,7 @@ import java.util.concurrent.Future;
 
 public interface Transaction {
 
-    void begin(List<String> requests) throws InterruptedException;
+    TransactionManager begin(List<String> requests) throws InterruptedException;
 
     void rollback();
 
