@@ -1,10 +1,11 @@
 package transaction;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 public interface Transaction {
 
-    public void begin(String txn, List<String> args);
+    public void begin(List<String>  requests) throws InterruptedException;
 
     public void rollback();
 
@@ -12,5 +13,5 @@ public interface Transaction {
 
     public boolean isDone();
 
-    public String getResponse();
+    public List<Future<String>> getResponse();
 }

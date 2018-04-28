@@ -1,8 +1,10 @@
 import transaction.AES;
+import transaction.Transaction;
 import transaction.TransactionManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 //        transaction.MultipleThread multipleThread = new transaction.MultipleThread();
 ////        System.out.println(multipleThread.start());
@@ -20,22 +22,32 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        String request = AES.encrypt("8^EAF159ADC5808466C55ACEFD49FCF473D3D75E4926B572F5321B0FA55C7752C4^4321^1111^");
 
-
-        List<String> ar = new ArrayList<>();
-        ar.add("#1");
-        ar.add("#2");
-        TransactionManager.getInstance().begin(request,ar);
+        List<String> request = new ArrayList<>();
+        request.add(AES.encrypt("8^EAF159ADC5808466C55ACEFD49FCF473D3D75E4926B572F5321B0FA55C7752C4^4321^1111^"));
+        request.add(AES.encrypt("8^EAF159ADC5808466C55ACEFD49FCF473D3D75E4926B572F5321B0FA55C7752C4^4321^1111^"));
+        try {
+            TransactionManager.getInstance().begin(request);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 //        TransactionManager.getInstance().cancel();
+
         System.out.println("response -> "+TransactionManager.getInstance().getResponse());
+        TransactionManager.getInstance().getResponse().forEach(x -> {
+            try {
+             System.out.println(AES.decrypt(x.get()));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        });
 
 //        TransactionManager.getInstance().begin("buy",ar);
 ////        System.out.println("is done? -> "+TransactionManager.getInstance().isDone());
 ////        TransactionManager.getInstance().cancel();
 //        System.out.println("response -> "+TransactionManager.getInstance().getResponse());
-
-
     }
 
 }

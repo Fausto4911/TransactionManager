@@ -9,18 +9,20 @@ import java.util.concurrent.TimeUnit;
 
 public class TransactionWorker implements Callable<String> {
 
-    private String txn = "";
+    private String request = "";
     private String response = null;
-    public TransactionWorker(String txn, List<String> args){
-        this.txn = txn;
+    public TransactionWorker(String request ){
+        this.request = request;
 
     }
 
     @Override
     public String call() throws Exception {
         try {
+            System.out.println("request "+request);
 //           System.out.println(transaction.AES.decrypt(Connection.getInstance().open().send(transaction.AES.encrypt(request)).getResponse()));
-          response = Connection.getInstance().open().send(txn).getResponse();
+//            Connection.getInstance().open();
+            response = new Connection().open().send(request).getResponse();
         } catch (Exception e) {
             e.printStackTrace();
         }

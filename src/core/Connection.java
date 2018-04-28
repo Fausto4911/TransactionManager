@@ -13,26 +13,23 @@ public class Connection {
     private BufferedReader bufferedReader;
     private OutputStream output;
     private PrintWriter out;
-    private static Connection ourInstance = new Connection();
 
-    public static Connection getInstance() {
-        return ourInstance;
-    }
 
-    private Connection() {
+    public Connection() {
         this.socket = new Socket();
     }
 
    public Connection open() throws IOException {
        this.socket.setKeepAlive(true);
-     if(!socket.isConnected()) this.socket.connect(new InetSocketAddress("fep.dev.xplatform.cc",30063));
-       return ourInstance;
+     if(!socket.isConnected())
+         this.socket.connect(new InetSocketAddress("fep.dev.xplatform.cc",30063));
+       return this;
    }
 
 
     public Connection connect() throws IOException {
 
-        return ourInstance;
+        return this;
     }
 
     public Connection send(String request) throws IOException {

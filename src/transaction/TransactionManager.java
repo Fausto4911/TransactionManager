@@ -1,16 +1,14 @@
 package transaction;
 
-import tuts.common.LoopTaskB;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 
 public class TransactionManager implements Transaction   {
 
     private List<String> args = new ArrayList<>();
     private ExecutorService executorService;
-    private Future<String> future;
+    private List<Future<String>> responses;
+    private Set<TransactionWorker> works;
     private static TransactionManager ourInstance = new TransactionManager();
 
     public static TransactionManager getInstance() {
@@ -20,39 +18,42 @@ public class TransactionManager implements Transaction   {
     private TransactionManager() {}
 
     @Override
-    public void begin(String txn, List<String> args) {
-        executorService =  Executors.newSingleThreadExecutor();
-//        executorService =  Executors.newFixedThreadPool(3);
-         future =  executorService.submit(new TransactionWorker(txn,this.args));
+    public void begin(List<String>  requests) throws InterruptedException {
+        System.out.println("length "+requests.size());
+        executorService =  Executors.newFixedThreadPool(requests.size());
+         works = new HashSet<>(requests.size());
+         requests.forEach( request -> works.add(new TransactionWorker(request)) );
+
+        //         future =  executorService.submit(new TransactionWorker(txn,this.args));
 
          }
 
     @Override
     public void rollback() {
         this.cancel();
-        this.begin("rollback",args);
 
     }
 
     @Override
     public void cancel() {
-        this.future.cancel(true);
+        this.responses.clear();
         executorService.shutdown();
     }
 
     @Override
     public boolean isDone() {
-        return  this.future.isDone();
+        return false;
     }
 
     @Override
-    public String getResponse() {
+    public List<Future<String>> getResponse() {
          try {
-                executorService.shutdown();
-                return AES.decrypt(future.get(30, TimeUnit.SECONDS));
+//                executorService.shutdown();
+               return responses = executorService.invokeAll(works,30, TimeUnit.SECONDS);
+//                return AES.decrypt(future.get(30, TimeUnit.SECONDS));
             } catch (Exception e) {
              System.out.println(e);
-             this.future.cancel(true);
+//             this.responses.clear();
                 return null;
             }
     }
