@@ -30,25 +30,33 @@ public class Main {
         request.add(AES.encrypt("8^EAF159ADC5808466C55ACEFD49FCF473D3D75E4926B572F5321B0FA55C7752C4^4321^1111^"));
         System.out.println("INICIO ");
 
+//        try {
+//            TransactionManager.getInstance().begin(request);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//
+//        System.out.println("is done " + TransactionManager.getInstance().isDone());
 
-      Thread thread = new Thread(() ->{
+              Thread thread = new Thread(() ->{
           try {
-              TransactionManager.getInstance().begin(request)
-                      .getResponse().forEach(x -> {
-                  try {
-                      System.out.println(AES.decrypt(x.get()));
-                  } catch (InterruptedException | ExecutionException e) {
-                      e.printStackTrace();
-                  }
-              });
+              TransactionManager.getInstance().begin(request);
+//              TransactionManager.getInstance().begin(request)
+//                      .getResponse().forEach(x -> {
+//                  try {
+//                      System.out.println(AES.decrypt(x.get()));
+//                  } catch (InterruptedException | ExecutionException e) {
+//                      e.printStackTrace();
+//                  }
+//              });
           } catch (InterruptedException e) {
               e.printStackTrace();
           }
       });
-//      thread.setDaemon(true);
-      thread.start();
+        thread.start();
 
-        System.out.println("FIN");
+
+        System.out.println("FIN" + "is done " + TransactionManager.getInstance().isDone());
 
 
 

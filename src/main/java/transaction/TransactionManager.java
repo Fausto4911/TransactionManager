@@ -7,11 +7,14 @@ public class TransactionManager implements Transaction {
 
     private ExecutorService executorService;
     private List<Future<String>> responses;
-    private Set<TransactionWorker> works;
-    private static TransactionManager ourInstance = new TransactionManager();
+    private List<TransactionWorker> works = new ArrayList<>();
+    private static TransactionManager instance;
 
-    public static TransactionManager getInstance() {
-        return ourInstance;
+    synchronized public static TransactionManager getInstance() {
+        synchronized (TransactionManager.class) {
+            if (instance == null) instance = new TransactionManager();
+            return instance;
+        }
     }
 
     private TransactionManager() {
@@ -21,29 +24,29 @@ public class TransactionManager implements Transaction {
     public TransactionManager begin(List<String> requests) throws InterruptedException {
         System.out.println("length " + requests.size());
         executorService = Executors.newFixedThreadPool(requests.size());
-        works = new HashSet<>(requests.size());
         requests.forEach(request ->
                 works.add(new TransactionWorker(request)));
         return this;
     }
 
     @Override
-    public void rollback() {
+    public synchronized void rollback() {
     }
 
     @Override
-    public void cancel() {
+    public synchronized void cancel() {
         this.works.clear();
         executorService.shutdown();
     }
 
     @Override
-    public boolean isDone() {
+    public synchronized boolean isDone() {
+        System.out.println("works size " + works.size());
         return false;
     }
 
     @Override
-    public List<Future<String>> getResponse() {
+    public synchronized List<Future<String>> getResponse() {
         try {
             responses = executorService.invokeAll(works, 30, TimeUnit.SECONDS);
             this.cancel();
