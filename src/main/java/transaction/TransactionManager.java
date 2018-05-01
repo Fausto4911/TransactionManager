@@ -6,8 +6,8 @@ import java.util.concurrent.*;
 public class TransactionManager implements Transaction {
 
     private ExecutorService executorService;
-    private List<Future<String>> responses;
-    private List<TransactionWorker> works = new ArrayList<>();
+    private List<Future<String>> responses = Collections.synchronizedList(new ArrayList<>());
+    private List<TransactionWorker> works = Collections.synchronizedList(new ArrayList<>());
     private static TransactionManager instance;
 
     synchronized public static TransactionManager getInstance() {
@@ -21,7 +21,7 @@ public class TransactionManager implements Transaction {
     }
 
     @Override
-    public TransactionManager begin(List<String> requests) throws InterruptedException {
+    public synchronized TransactionManager begin(List<String> requests) throws InterruptedException {
         System.out.println("length " + requests.size());
         executorService = Executors.newFixedThreadPool(requests.size());
         requests.forEach(request ->

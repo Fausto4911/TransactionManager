@@ -9,6 +9,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class Main {
 
@@ -55,7 +56,13 @@ public class Main {
       });
         thread.start();
 
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
+        System.out.println("#############################################");
         System.out.println("FIN" + "is done " + TransactionManager.getInstance().isDone());
 
 
