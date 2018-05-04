@@ -1,18 +1,9 @@
-import javafx.concurrent.Task;
 import transaction.AES;
 import transaction.Manager;
-import transaction.Transaction;
-import transaction.TransactionManager;
-
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class Main {
@@ -36,17 +27,31 @@ public class Main {
         System.out.println("INICIO ");
 
 
+        try {
+            Manager.getInstance().getResponses(request).forEach((response) -> {
+                try {
+                    System.out.println(response.get());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            });
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Manager.getInstance().addTransaction(1,"8^EAF159ADC5808466C55ACEFD49FCF473D3D75E4926B572F5321B0FA55C7752C4^4321^1111^");
+         Manager.getInstance().addTransaction(2,"8^EAF159ADC5808466C55ACEFD49FCF473D3D75E4926B572F5321B0FA55C7752C4^4321^1111^");
+         Manager.getInstance().addTransaction(3,"8^EAF159ADC5808466C55ACEFD49FCF473D3D75E4926B572F5321B0FA55C7752C4^4321^1111^");
 
 
-         Manager.getInstance().addTransaction(1,"8^EAF159ADC5808466C55ACEFD49FCF473D3D75E4926B572F5321B0FA55C7752C4^4321^1111^");
-
-         Manager.getInstance().cancel(1);
-
-          System.out.println(Manager.getInstance().isCancel(1));
 
 
         try {
-            Manager.getInstance().getResponse(1);
+           System.out.println( "1 -> "+Manager.getInstance().getResponse(1) );
+            System.out.println( "2 -> "+Manager.getInstance().getResponse(2) );
+            System.out.println( "3 -> "+Manager.getInstance().getResponse(3) );
         } catch (ExecutionException e) {
             System.out.println("1");
             e.printStackTrace();
@@ -61,23 +66,9 @@ public class Main {
         }
 
 
-        //
-//      Thread thread = new Thread(() ->{
-//          try {
-//              TransactionManager.getInstance().begin(request)
-//                      .getResponse().forEach(x -> {
-//                  try {
-//                      System.out.println(AES.decrypt(x.get()));
-//                  } catch (InterruptedException | ExecutionException e) {
-//                      e.printStackTrace();
-//                  }
-//              });
-//          } catch (InterruptedException e) {
-//              e.printStackTrace();
-//          }
-//      });
-////      thread.setDaemon(true);
-//      thread.start();
+
+
+
 
         System.out.println("FIN");
 

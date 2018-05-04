@@ -22,10 +22,9 @@ public class Manager {
     private Manager() {
     }
 
-
     public Manager addTransaction(Integer index, String request){
-              Future<String> future =  executorService.submit(new TransactionWorker(request));
-            transactions.put(index,future);
+        Future<String> future =  executorService.submit(new TransactionWorker(request));
+        transactions.put(index,future);
         return this;
     }
 
@@ -35,7 +34,9 @@ public class Manager {
     }
 
     public String getResponse(Integer index) throws CancellationException, ExecutionException, TimeoutException, InterruptedException {
-        return transactions.get(index).get(30, TimeUnit.SECONDS);
+        String response = transactions.get(index).get(30, TimeUnit.SECONDS);
+                transactions.remove(index);
+        return response;
     }
 
     public void cancel(Integer index) {
@@ -47,31 +48,12 @@ public class Manager {
     }
 
 
-
-
-//    public synchronized String getResponse(Integer index) {
-//        try {
-//            return futureMap.get(index).get();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-//
-//    public Manager start(Integer index){
-//
-//        Thread thread = new Thread(()->{
-//
-//            Future <String> future = futureMap.put(index,executorService.submit(transactionWorkers.get(index)));
-//            futureMap.put(index,future);
-//        });
-//
-//        thread.start();
-//
-//        return this;
-//    }
-
+    public List<Future<String>> getResponses (List<String> requests) throws InterruptedException {
+        List<TransactionWorker> transactionWorkers = new ArrayList<>();
+    requests.forEach((request)->{
+        transactionWorkers.add(new TransactionWorker(request));
+    });
+       return executorService.invokeAll(transactionWorkers, 30, TimeUnit.SECONDS);
+    }
 
 }
