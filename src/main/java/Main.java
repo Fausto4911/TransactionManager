@@ -10,8 +10,10 @@ import java.awt.event.KeyListener;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class Main {
 
@@ -34,17 +36,29 @@ public class Main {
         System.out.println("INICIO ");
 
 
-        Manager.getInstance().
-                addTransaction(1,"8^EAF159ADC5808466C55ACEFD49FCF473D3D75E4926B572F5321B0FA55C7752C4^4321^1111^").
-                start(1).isDone(1);
-//        .isDone(1);
-//
-//        try {
-//            TimeUnit.SECONDS.sleep(2);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//     System.out.println( Manager.getInstance().isDone(1) );
+
+
+         Manager.getInstance().addTransaction(1,"8^EAF159ADC5808466C55ACEFD49FCF473D3D75E4926B572F5321B0FA55C7752C4^4321^1111^");
+
+         Manager.getInstance().cancel(1);
+
+          System.out.println(Manager.getInstance().isCancel(1));
+
+
+        try {
+            Manager.getInstance().getResponse(1);
+        } catch (ExecutionException e) {
+            System.out.println("1");
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            System.out.println("2");
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            System.out.println("3");
+            e.printStackTrace();
+        } catch (CancellationException e) {
+            System.out.println("4");
+        }
 
 
         //
