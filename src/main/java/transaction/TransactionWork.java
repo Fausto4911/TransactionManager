@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-public class TransactionWorker implements Callable<String> {
+public class TransactionWork implements Callable<String> {
 
     private String request = "";
     private String response = null;
 
-    public TransactionWorker(String request) {
+    public TransactionWork(String request) {
         this.request = request;
 
     }
@@ -20,9 +20,8 @@ public class TransactionWorker implements Callable<String> {
     @Override
     public String call() throws Exception {
         try {
-            System.out.println("request " + request);
+            System.out.println("request ->" + request);
             response = new Connection().open().send(request).getResponse();
-            TimeUnit.SECONDS.sleep(3);
         } catch (Exception e) {
             e.printStackTrace();
         }

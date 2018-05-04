@@ -1,0 +1,103 @@
+package transaction;
+
+public enum TxnType {
+    INVALID_TXN(0),
+    LOGIN(1),
+    ACCOUNT(2),
+    USER(3),
+    ENTITY(4),
+    PRODUCTS(5),
+    PRODUCT_CATEGORY(6),
+    PRODUCT_TYPE(7),
+    PRODUCT_DENOMINATION(8),
+    GAMES(9),
+    LOTTERY(10),
+    DRAWS(11),
+    TIMESTAMP(12),
+    BUY_LOTTERY(13),
+    BUY_TOPUP(14),
+    VOID_LOTTERY(15),
+    VOID_TOPUP(16),
+    LOTTERY_TRANSACTIONS(17),
+    TOPUP_TRANSACTIONS(18),
+    TOPUP_TRANSACTION_BY_REFERENCE(19),
+    LOTTERY_TRANSACTION_BY_REFERENCE(20),
+    LOTTERY_TRANSACTION_BY_DATE(21),
+    TOPUP_TRANSACTION_BY_DATE(22),
+    WINNER_CONFIRMATION(23),
+    AWARD_PAYMENT(24),
+    WINNER_REPORT(25),
+    SALES_BY_DRAW(26),
+    SALES_SUMMARY(27),
+    PING(28),
+    VOID_LOTTERY_BY_REFERENCE(29),
+    SUMMARY_BY_DRAW(30),
+    SUMMARY_BY_GAME(31),
+    TOPUP_SALES_BY_CARRIER(32),
+    WINNERS_DETAIL_REPORT(33),
+    POLICY_VEHICLE_TYPE(34),
+    POLICY_VEHICLE_PLATE_TYPE(35),
+    POLICY_AUTH(36),
+    POLICY_BUY(37),
+    POLICY_QUERY(38),
+    POLICY_TRANSACTIONS(39),
+    POLICY_SALES_BY_VEHICLE_TYPE(40),
+    POLICY_SALES_BY_DATE(41),
+    PAYSERVICE_COMPANY_CATEGORIES(42),
+    PAYSERVICE_COMPANIES(43),
+    PAYSERVICE_CONTRACT(44),
+    PAYSERVICE_BUY(45),
+    PAYSERVICE_QUERY(46),
+    PAYSERVICE_TRANSACTIONS(47),
+    PAYSERVICE_SALES_BY_COMPANY(48),
+    PAYSERVICE_SALES_BY_DATE(49),
+    SPORTIVE_SPORTS(50),
+    SPORTIVE_LIGUES(51),
+    SPORTIVE_MATCHS(52),
+    SPORTIVE_GAMBLE_TYPES(53),
+    SPORTIVE_GAMBLE_PLANS(54),
+    SPORTIVE_BUY(55),
+    SPORTIVE_VOID(56),
+    SPORTIVE_QUERY(57),
+    SPORTIVE_TRANSACTIONS(58),
+    SPORTIVE_SUMMARY(59),
+    SPORTIVE_SUMMARY_BY_DATE(60),
+    SPORTIVE_SUMMARY_BY_SPORT(61),
+    LOTTERY_BUY_OFFLINE(62),
+    SPORTIVE_SUMMARY_BY_LIGUES(63),
+    SPORTIVE_SUMMARY_BY_MATCH(64),
+    SPORTIVE_SUMMARY_BY_GAMBLE_TYPE(65),
+    SPORTIVE_BUY_OFFLINE(66),
+    PAYSERVICE_VOID(67),
+    TICKET_OPTION(68),
+    TRANSACTIONS_BY_ID(69),
+    DETAILS_BY_DRAW(70),
+    TOTAL_SALES(71),
+    LAST_GAMBLE(74),
+    NOTIFICATION(75),
+    OFFLINE_REPORT(99);
+
+    private final int txn;
+
+    private TxnType(int txn) {
+        this.txn = txn;
+    }
+
+    public int getTxn() {
+        return this.txn;
+    }
+
+    public static TxnType getTxnTypeByValue(int value) {
+        TxnType[] var1 = values();
+        int var2 = var1.length;
+
+        for(int var3 = 0; var3 < var2; ++var3) {
+            TxnType type = var1[var3];
+            if (type.txn == value) {
+                return type;
+            }
+        }
+
+        return null;
+    }
+}

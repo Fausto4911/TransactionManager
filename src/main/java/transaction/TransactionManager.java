@@ -7,7 +7,7 @@ public class TransactionManager implements Transaction {
 
     private ExecutorService executorService;
     private List<Future<String>> responses;
-    private Set<TransactionWorker> works;
+    private Set<TransactionWork> works;
     private static TransactionManager ourInstance = new TransactionManager();
 
     public static TransactionManager getInstance() {
@@ -23,7 +23,7 @@ public class TransactionManager implements Transaction {
         executorService = Executors.newFixedThreadPool(requests.size());
         works = new HashSet<>(requests.size());
         requests.forEach(request ->
-                works.add(new TransactionWorker(request)));
+                works.add(new TransactionWork(request)));
         return this;
     }
 
