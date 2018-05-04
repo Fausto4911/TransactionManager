@@ -22,6 +22,7 @@ public class TransactionWorker implements Callable<String> {
         try {
             System.out.println("request " + request);
             response = new Connection().open().send(request).getResponse();
+            TimeUnit.SECONDS.sleep(3);
         } catch (Exception e) {
             e.printStackTrace();
         }
